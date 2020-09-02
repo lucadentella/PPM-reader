@@ -4,7 +4,7 @@ PPM Reader is an interrupt based [pulse-position modulation](https://en.wikipedi
 
 Using interrupts (instead of pulseIn or some equivalent) to detect pulses means that reading the signal can be done in a non-blocking way. This means that using PPM Reader doesn't significantly slow down your program's code and you can do any other timing sensitive processes in your program meanwhile reading the incoming PPM signals.
 
-The library uses [zeitgeist87's InterruptHandler library](https://github.com/zeitgeist87/InterruptHandler) for object-oriented interrupt handling. A copy of a compatible version of the library is included in this repository.
+This updated version **does not** require [zeitgeist87's InterruptHandler library](https://github.com/zeitgeist87/InterruptHandler) and therefore should work on different platforms (tested on esp32).
 
 ## Usage
 
