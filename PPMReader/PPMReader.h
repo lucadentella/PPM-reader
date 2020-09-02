@@ -21,10 +21,9 @@ along with PPM Reader.  If not, see <http://www.gnu.org/licenses/>.
 #define PPM_READER
 
 #include <Arduino.h>
-#include <InterruptHandler.h>
 
 
-class PPMReader : InterruptHandler {
+class PPMReader {
 
     public:
     
@@ -73,10 +72,8 @@ class PPMReader : InterruptHandler {
      * Returns defaultValue if the given channel hasn't received any valid values yet. */
     unsigned long latestValidChannelValue(byte channel, unsigned long defaultValue);
 
-    private:
-
     // An interrupt service routine for handling the interrupts activated by PPM pulses
-    virtual void handleInterrupt(int8_t interruptNum);
+    virtual void handleInterrupt();
 
 };
 

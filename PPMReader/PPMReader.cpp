@@ -19,7 +19,27 @@ along with PPM Reader.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "PPMReader.h"
 
+
+/* 
+	ISR can't be a class member, this is a workaround to call a class member
+	when interrupt fires, as explained here: 
+	https://www.onetransistor.eu/2019/05/arduino-class-interrupts-and-callbacks.html
+*/
+
+// pointer to current instance
+PPMReader *_ppmReader;
+
+// external ISR, calls class member handler
+static void outsideInterruptHandler(void) {
+  _ppmReader->handleInterrupt(); 
+}
+
+
 PPMReader::PPMReader(byte interruptPin, byte channelAmount) {
+	
+	// save current instance
+	_ppmReader = this;
+	
     // Check for valid parameters
     if (interruptPin > 0 && channelAmount > 0) {
         // Setup an array for storing channel values
@@ -33,7 +53,7 @@ PPMReader::PPMReader(byte interruptPin, byte channelAmount) {
         // Attach an interrupt to the pin
         this->interruptPin = interruptPin;
         pinMode(interruptPin, INPUT);
-        attachInterrupt(digitalPinToInterrupt(interruptPin), RISING);
+        attachInterrupt(digitalPinToInterrupt(interruptPin), outsideInterruptHandler, RISING);
     }
 }
 
@@ -43,7 +63,7 @@ PPMReader::~PPMReader() {
     delete [] validValues;
 }
 
-void PPMReader::handleInterrupt(int8_t interruptNum) {
+void PPMReader::handleInterrupt() {
     // Remember the current micros() and calculate the time since the last pulseReceived()
     unsigned long previousMicros = microsAtLastPulse;
     microsAtLastPulse = micros();
